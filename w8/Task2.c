@@ -88,8 +88,8 @@ struct TreeNode** find_successor(struct TreeNode* root){
     return res;
 }
 
-struct TreeNode** find_predeseccor(struct TreeNode* root){
-    struct TreeNode** res = malloc(sizeof(struct TreeNode)*2);
+struct TreeNode** find_predecessor(struct TreeNode* root){
+    struct TreeNode** res = malloc(sizeof(struct TreeNode*)*2);
     struct TreeNode* par = NULL;
 
     if(root->left == NULL){
@@ -113,10 +113,11 @@ struct TreeNode** find_predeseccor(struct TreeNode* root){
     return res;
 }
 
+//swap the objects the pointers are pointing to
 void swap(struct TreeNode* A, struct TreeNode* B){
-    struct TreeNode* temp = A;
-    A = B;
-    B = temp;
+    struct TreeNode temp = *A;
+    *A = *B;
+    *B = temp;
 
 }
 
@@ -241,6 +242,46 @@ struct TreeNode*** find_node(int value, struct TreeNode** parent_ptr, struct Tre
     }
 }
 
+//assuming that the trees nodes are uniquely identified with their int value, or that it does not matter
+void del_node(int value, struct TreeNode** root){
+    struct TreeNode** root_p = &root;
+
+    struct TreeNode*** root_par = find_node(value,NULL,root_p);
+
+    //first we check if there is a predecessor node 
+    struct TreeNode* to_del = *root_par[0];
+
+    struct TreeNode** to_del_p = root_par[1];
+
+    struct TreeNode** pre_par = find_predecessor(to_del);
+
+    //check if predecessor exists
+    bool l = false;
+    if(pre_par[0] == NULL){
+        //in this case look for sucessor
+        pre_par = find_successor(to_del);
+        l = true;
+    }
+
+    //now check if the successor or predecessor are valid 
+    if(l == false && pre_par[1] != NULL){
+        //swap predecessor and to_del , then delete to_del, then set par pointer to to_del to NULL
+        swap(pre_par[1],to_del);
+        free(to_del);
+        pre_par[1]->right = NULL;
+    }
+    else if (l == true && pre_par[1] != NULL){
+        swap(pre_par[1], to_del);
+        free(to_del);
+        pre_par[1]->left = NULL;
+    } 
+    else{
+        //in this case we dont have a valid successor or predecessor, where we can swap and then delete, so we must use a differnet function instead
+        //TODO implement this function
+    }
+
+
+}
 
 int main(){
 
@@ -264,7 +305,7 @@ int main(){
     traverse(root);
 
 
-    struct TreeNode** pre = find_predeseccor(root);
+    struct TreeNode** pre = find_predecessor(root);
     struct TreeNode** succ = find_successor(root);
 
     printf("%s","\npre:\n");
@@ -276,7 +317,26 @@ int main(){
 
     printf("%s","\n");
 
-    //delete(root,4);
+
+    //TESTING swap function
+    struct TreeNode* a = init_TreeNode(3,NULL,NULL);
+
+    struct TreeNode* b = init_TreeNode(10,NULL,NULL);
+
+    struct TreeNode* c = init_TreeNode(5,a,b);
+
+    swap(a,b);
+    printf("%s","swap test\n");
+    printf("%d",a->val);
+    printf("%s"," value of node a ");
+    printf("%s","\n");
+    printf("%d",b->val);
+    printf("%s"," value of b\n");
+    printf("%d",c->left->val);
+    printf("%s"," value of root.left\n");
+
+
+    //del_node(4,&root);
 
     //delete(root,12);
 
