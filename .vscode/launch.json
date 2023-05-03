@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C/C++: Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cwd}/w6/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "environment": [],
+            "externalConsole": false,
+            "cwd" : "${fileDirname}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

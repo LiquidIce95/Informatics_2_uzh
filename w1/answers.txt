@@ -1,0 +1,29 @@
+Task 1
+1.1
+We can observe that from order one to two we have the same figure 4 times rotated slightly so we multiply by 4.
+in addition they are connected , which adds 3 "bridges" that connect them. Assuming the lines are drawn from the center of the square
+the length of the first order is 2.5*3=7.5 cm . Each bridge is also 2.5 cm.
+so total length of order 2 is 7.5*4 + 3*2.5 = 37.5
+we can now compute order 3 recursevely with : f(n) = 4*f(n)+3*2.5
+
+so for n= 3 we get 157.5
+
+for n==15 2684354557.5
+which is none of the answers :)
+
+So with "canvas" a single square is probably meant which means
+
+H(1) = 15
+H(2) = 75
+H(3) = 315
+H(15)= 5368709115 so the fifth option is correct
+
+1.2
+
+false, it is constant if we only treat swapping as a cost and comparison not
+otherwise if we treat comparisions as cost we have (n-1)^{2}
+
+assuming swapping is only cost then true, if comparison is cost then again (n-1)^2 but in either case it is independant of datastructure
+
+false it must be sorted in ascending order
+

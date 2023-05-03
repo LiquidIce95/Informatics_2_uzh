@@ -1,0 +1,21 @@
+We traverse the Queue Queue
+
+S = Stack()
+
+node* n = Q.head
+
+while(n != null):
+    // we check if the node is even
+    if(n.value % 2 == 0):
+        S.push(n.value)
+    n = n.next
+
+n = Q.head
+//after this iteration we have a stack with all even values of the Queue
+while(n  != null):
+    if(n.value % 2 == 0):
+        n.value = S.pop()
+
+// now since popping the stack is in reverse order of initialization we reversed the order of all even values
+eaz
+
