@@ -225,8 +225,6 @@ void print_tree(struct TreeNode* root){
 
 //finds the node with the value 'val' and returns that node and its parent pointer 
 //which is pointing to it or returns NULL, if that node is not in the tree
-//both are pointed by another pointer node_par[0] is the pointer to the pointer of the root pointer of the tree
-//node_par[0] and node_par[1] must be initialized with NULL
 struct TreeNode*** find_node(int value, struct TreeNode** parent_ptr, struct TreeNode** child_ptr) {
     if ((*child_ptr) == NULL) {
         return NULL;
