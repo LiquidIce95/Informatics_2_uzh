@@ -267,6 +267,7 @@ void left_case(struct TreeNode*** root_par){
 
     else {
         //swap root_par[0] and prede, then delete prede
+        //TODO: somehow prede[0] does not get passed on to swap properly, but root_par[0] does even though they have the same datatype?
         swap(prede[0],root_par[0]);
         free(prede[0]);
         *prede[1] = NULL;
