@@ -61,7 +61,7 @@ void insert(struct TreeNode* root, int value){
 
 //swap the objects the pointers are pointing to
 void swap(struct TreeNode** A, struct TreeNode** B){
-    struct TreeNode* temp = (*A)->val;
+    int temp = (*A)->val;
     (*A)->val = (*B)->val;
     (*B)->val = temp;
 
@@ -219,7 +219,7 @@ struct TreeNode*** predecessor(struct TreeNode* root){
 }
 
 //look at predecessor since its analogous
-struct TreeNode** successor(struct TreeNode* root){
+struct TreeNode*** successor(struct TreeNode* root){
     if(root->right == NULL){
         return NULL;
     }
@@ -234,7 +234,7 @@ struct TreeNode** successor(struct TreeNode* root){
     struct TreeNode*** res = malloc(sizeof(struct TreeNode**)*2);
 
     while(root->left != NULL){
-        res[0] = &(root->left);
+        res[1] = &(root->left);
         root = root->left;
     }
 
@@ -248,25 +248,20 @@ struct TreeNode** successor(struct TreeNode* root){
 // pointing to N
 void left_case(struct TreeNode*** root_par){
     // first we check if there is a in-order predecessor
-    struct TreeNode*** prede = predecessor(root_par[0]);
+    struct TreeNode*** prede = predecessor(*root_par[0]);
 
     //check if the prede is valid
     if(prede == NULL){
-        //for this case we need to implement the rotation fucntions which are used for maintaining the balance
-        //here we have again two possibilities prede[0] has either none or at least one node, if it has none then we swap it with root_par[0] which
-        // we want to delete, we know there is a left child
-        if((*root_par[0])->left == NULL){
-            swap(&((*root_par[0])->left),root_par[0]);
-            free((*root_par[0])->left);
-            (*root_par[0])->left == NULL;
+        //now we know that the left chidl of root_par[0] has no right child, which means if root_par[0] itself has
+        //a right child, then we can give root_par[0]->right to root_par[0], effectively making the left child the new root
+        if((*root_par[0])->right != NULL){
+            (*root_par[0])->left->right = (*root_par[0])->right;
         }
 
-        //now since there is no valid predecessor the left child cannot have a right child, so 
-        // if there is a left child of the left child 
+        //now we set the parent 
+        (*root_par[1]) = (*root_par[0])->left;
 
-
-
-
+        free(*root_par[0]);
 
     }
 
@@ -280,7 +275,25 @@ void left_case(struct TreeNode*** root_par){
     
 }
 
+//completely analogous to left case
 void right_case(struct TreeNode*** root_par){
+    struct TreeNode*** succe = successor(*root_par[0]);
+
+    if(succe == NULL){
+        if((*root_par[0])->left != NULL){
+            (*root_par[0])->right->left = (*root_par[0])->left;
+        }
+
+        (*root_par[1]) = (*root_par[0])->right;
+
+        free(*root_par[0]);
+    }
+
+    else{
+        swap(succe[0],root_par[0]);
+        free(succe[0]);
+        *succe[1] = NULL;
+    }
 
 }
 
@@ -342,7 +355,7 @@ int main(){
 
     struct TreeNode* c = init_TreeNode(5,a,b);
 
-    swap(a,b);
+    swap(&a,&b);
     printf("%s","swap test\n");
     printf("%d",a->val);
     printf("%s"," value of node a ");
@@ -355,7 +368,7 @@ int main(){
     printf("%s","\n testing deletion *******************\n");
 
     //deleting a key that does not exist
-    //del_node(4,&root);
+    del_node(4,&root);
 
 
     //deleting the root
