@@ -58,66 +58,12 @@ void insert(struct TreeNode* root, int value){
 
 }
 
-struct TreeNode** find_successor(struct TreeNode* root){
-    struct TreeNode* par = NULL;
-    struct TreeNode** res = malloc(sizeof(struct TreeNode*)*2);
-
-
-    if(root->right==NULL){
-        res[0] = NULL;
-        res[1] = NULL;
-
-        return res;
-
-    }
-
-    else {
-        root = root->right;
-    }
-
-
-    while(root->left != NULL){
-        par = root;
-        root = root->left;
-    }
-
-
-    res[0] = root;
-    res[1] = par;
-
-    return res;
-}
-
-struct TreeNode** find_predecessor(struct TreeNode* root){
-    struct TreeNode** res = malloc(sizeof(struct TreeNode*)*2);
-    struct TreeNode* par = NULL;
-
-    if(root->left == NULL){
-        res[0] = NULL;
-        res[1] = NULL;
-        return res;
-
-    }
-    else{
-        root = root->left;
-    }
-
-    while(root->right != NULL){
-        par = root;
-        root = root->right;
-    }
-
-    res[0] = root;
-    res[1] = par;
-
-    return res;
-}
 
 //swap the objects the pointers are pointing to
-void swap(struct TreeNode* A, struct TreeNode* B){
-    struct TreeNode temp = *A;
-    *A = *B;
-    *B = temp;
+void swap(struct TreeNode** A, struct TreeNode** B){
+    struct TreeNode* temp = (*A)->val;
+    (*A)->val = (*B)->val;
+    (*B)->val = temp;
 
 }
 
@@ -241,47 +187,131 @@ struct TreeNode*** find_node(int value, struct TreeNode** parent_ptr, struct Tre
         return find_node(value, child_ptr, &((*child_ptr)->left));
     }
 }
-
-//assuming that the trees nodes are uniquely identified with their int value, or that it does not matter
-void del_node(int value, struct TreeNode** root){
-    struct TreeNode** root_p = &root;
-
-    struct TreeNode*** root_par = find_node(value,NULL,root_p);
-
-    //first we check if there is a predecessor node 
-    struct TreeNode* to_del = *root_par[0];
-
-    struct TreeNode** to_del_p = root_par[1];
-
-    struct TreeNode** pre_par = find_predecessor(to_del);
-
-    //check if predecessor exists
-    bool l = false;
-    if(pre_par[0] == NULL){
-        //in this case look for sucessor
-        pre_par = find_successor(to_del);
-        l = true;
+//return on [0] the actual predecessor and on [1] the pointer of its parent to itself
+struct TreeNode*** predecessor(struct TreeNode* root){
+    if(root->left == NULL){
+        return NULL;
     }
 
-    //now check if the successor or predecessor are valid 
-    if(l == false && pre_par[1] != NULL){
-        //swap predecessor and to_del , then delete to_del, then set par pointer to to_del to NULL
-        swap(pre_par[1],to_del);
-        free(to_del);
-        pre_par[1]->right = NULL;
+    root = root->left;
+
+    //however this is not a valid inorder predecessor yet
+    if(root->right == NULL){
+        return NULL;
     }
-    else if (l == true && pre_par[1] != NULL){
-        swap(pre_par[1], to_del);
-        free(to_del);
-        pre_par[1]->left = NULL;
-    } 
-    else{
-        //in this case we dont have a valid successor or predecessor, where we can swap and then delete, so we must use a differnet function instead
-        //TODO implement this function
+
+    struct TreeNode*** res = malloc(sizeof(struct TreeNode**)*2);
+
+
+    //since we know at this point that we can at least go once to the right, this will ba a valid return
+    while(root->right != NULL){
+
+        res[1] = &(root->right);
+        root = root->right;
     }
+
+
+    res[0] = &root;
+
+    return res;
 
 
 }
+
+//look at predecessor since its analogous
+struct TreeNode** successor(struct TreeNode* root){
+    if(root->right == NULL){
+        return NULL;
+    }
+
+    root = root->right;
+
+    if(root->left == NULL){
+        root = root->left;
+    }
+
+
+    struct TreeNode*** res = malloc(sizeof(struct TreeNode**)*2);
+
+    while(root->left != NULL){
+        res[0] = &(root->left);
+        root = root->left;
+    }
+
+
+    res[0] = &root;
+
+    return res;
+}
+
+//PRE: root_par[0] is the pointer to the node N which should be deleted and root_par[1] is the pointer of the parent, that is 
+// pointing to N
+void left_case(struct TreeNode*** root_par){
+    // first we check if there is a in-order predecessor
+    struct TreeNode*** prede = predecessor(root_par[0]);
+
+    //check if the prede is valid
+    if(prede == NULL){
+        //for this case we need to implement the rotation fucntions which are used for maintaining the balance
+        //here we have again two possibilities prede[0] has either none or at least one node, if it has none then we swap it with root_par[0] which
+        // we want to delete, we know there is a left child
+        if((*root_par[0])->left == NULL){
+            swap(&((*root_par[0])->left),root_par[0]);
+            free((*root_par[0])->left);
+            (*root_par[0])->left == NULL;
+        }
+
+        //now since there is no valid predecessor the left child cannot have a right child, so 
+        // if there is a left child of the left child 
+
+
+
+
+
+    }
+
+    else {
+        //swap root_par[0] and prede, then delete prede
+        swap(prede[0],root_par[0]);
+        free(prede[0]);
+        *prede[1] = NULL;
+
+    }
+    
+}
+
+void right_case(struct TreeNode*** root_par){
+
+}
+
+//asssuming that root is the root of the entire tree so parent pointer is null
+//assuming there exists a inorder successor or predecessor
+void del_node(int value, struct TreeNode** root){
+    //first ewe need to find the node to be deleted and its parent pointer to it
+    struct TreeNode*** root_parent = find_node(value,NULL,root);
+
+    //if the node s a leaf, we can simply delete it and and set the parentpointer to null
+    if((*root_parent[0])->left == NULL && (*root_parent[1])->right == NULL){
+        free((*root_parent[0]));
+        (*root_parent[1]) = NULL;
+
+    }
+
+    //now there are the following cases, if there is a left child there could or could not be a in-order predecessor we
+    if((*root_parent[0])->left != NULL){
+        left_case(root_parent);
+    }
+    //analogously if there is a right child there could or could not be a in-order successsor
+    else {
+        right_case(root_parent);
+    }
+
+    //after these cases we successfully deleted the node
+
+
+}
+
+
 
 int main(){
 
@@ -305,19 +335,6 @@ int main(){
     traverse(root);
 
 
-    struct TreeNode** pre = find_predecessor(root);
-    struct TreeNode** succ = find_successor(root);
-
-    printf("%s","\npre:\n");
-    printf("%d",pre[0]->val);
-
-
-    printf("%s","\nsucc:\n");
-    printf("%d",succ[0]->val);
-
-    printf("%s","\n");
-
-
     //TESTING swap function
     struct TreeNode* a = init_TreeNode(3,NULL,NULL);
 
@@ -335,17 +352,22 @@ int main(){
     printf("%d",c->left->val);
     printf("%s"," value of root.left\n");
 
+    printf("%s","\n testing deletion *******************\n");
 
+    //deleting a key that does not exist
     //del_node(4,&root);
 
-    //delete(root,12);
 
-    //delete(root,2);
+    //deleting the root
+    //del_node(2,&root);
 
     print_tree(root);
 
 
     traverse(root);
+
+
+    printf("%s","\n testing end deletion ****************\n");
 
 
     //testing find_node
