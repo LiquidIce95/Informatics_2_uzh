@@ -1,0 +1,43 @@
+fist step is to insert the new node into the red-black tree like usual and color it red
+then execute fixup to repair any violations concerning the red-black tree conditions
+
+after this step the first apparent violation is the 11 is red and its new child 15 is also red, and
+
+analyze the correct cases carefully and mirror cases then its straight forward
+
+task2
+delete 10:
+we first apply binary search tree deletion of 10, since 10 is a leaf we simply delete it,without any further action
+
+
+then insert 5 (red) this leads to a violation with its parent 4, case 2
+
+so we leftrotate(p(5)) this leads to a violation between 5 and 9 we handle this binary
+
+recoloring according to case 3 for insertion and then right rotate(8)
+the resulting treee is now valid
+
+now we delete 9
+
+since 9 has one NIL node we simply delete it and let the parent of 9 point to it
+
+since 9 color is red we are done.
+
+now delete 15
+
+standard deletion of binary search trees takes the largest from the left subtree which is 5 ,swap then delete 15 which has now one nil so easy
+
+but now we have a violation with the number of black nodes for each root-NIL paths
+
+this is according to the base case
+
+so we simply color 4 black 
+
+
+
+
+
+
+
+
+
