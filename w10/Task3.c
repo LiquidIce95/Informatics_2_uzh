@@ -59,14 +59,17 @@ int insertion(struct HashingTable* table, int ele){
         return -1;
     }
 
+
+    table->array[index] = ele;
+
     return index;
 }
 
 // returns the index of the element in the table, otherwise -1
 int search(struct HashingTable* table, int ele){
-    int probnum = -1;
+    int probnum = 0;
     int size = table->size;
-    int index = -1;
+    int index = table->hashfun(ele,size,probnum);
 
     while(index < size && table->array[index] != ele){
         index = table->hashfun(ele,size,++probnum);
@@ -147,13 +150,55 @@ int main(){
     }
 
 
-    // Unit tests for search 
-    printf("%s", "UNIT TESTS FOR SEARCH******************\n");
+    // collision test, 29 collides with 30 
+    printf("%s", "test 4: #####\n");
+    expected = hashfun1(90,table->size, 1);
+    result = table->insertion(table,90);
 
-    //TODO: search does not terminate...
+    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
+    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
+
+    // finding a collision for test 4 above
+    printf("%s","\n values comparison \n");
+    printf("%d",table->hashfun(30,table->size,0));
+    printf("%s","\n");
+ 
+    printf("%d",table->hashfun(90,table->size,0));
+ 
+    printf("%s","\n table print \n");
+    
+    table->print(table);
+
+    // Unit tests for search 
+    printf("%s", "\nUNIT TESTS FOR SEARCH******************\n");
+
     printf("%s", "test 1: #####\n");
     expected = 11;
     result = table->search(table,100);
+
+    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
+    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
+
+    // searching through a collision
+    printf("%s", "test 2: #####\n");
+    expected = 27;
+    result = table->search(table,90);
 
     printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
     printf("%s", "result: "); printf("%d",result); printf("%s","\n");
