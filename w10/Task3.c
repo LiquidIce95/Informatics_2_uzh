@@ -44,7 +44,8 @@ int hashfun1(int ele, int size, int probnum){
 
 }
 
-// inserts and returns the hashed index
+// inserts and returns the hashed index with open addressing via 
+// double hashing
 int insertion(struct HashingTable* table, int ele){
     int probnum = 0;
     int index = table->hashfun(ele,table->size,probnum);
