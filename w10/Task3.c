@@ -66,7 +66,7 @@ int insertion(struct HashingTable* table, int ele){
 int search(struct HashingTable* table, int ele){
     int probnum = -1;
     int size = table->size;
-    int index = table->hashfun(ele,size,probnum);
+    int index = -1;
 
     while(index < size && table->array[index] != ele){
         index = table->hashfun(ele,size,++probnum);
@@ -98,6 +98,9 @@ int main(){
     // unitests for insertion
     struct HashingTable* table = init(hashfun1,insertion,search,print,30);
 
+
+    printf("%s", "UNIT TESTS FOR INSETION\n");
+
     printf("%s", "test 1: #####\n");
     int expected = hashfun1(100,table->size, 0);
     int result = table->insertion(table,100);
@@ -113,6 +116,55 @@ int main(){
         printf("\033[31m FAIL \033[0m\n");
     }
 
+    printf("%s", "test 2: #####\n");
+    expected = hashfun1(30,table->size, 0);
+    result = table->insertion(table,30);
+
+    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
+    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
+
+    printf("%s", "test 3: #####\n");
+    expected = hashfun1(2,table->size, 0);
+    result = table->insertion(table,2);
+
+    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
+    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
+
+
+    // Unit tests for search 
+    printf("%s", "UNIT TESTS FOR SEARCH******************\n");
+
+    //TODO: search does not terminate...
+    printf("%s", "test 1: #####\n");
+    expected = 11;
+    result = table->search(table,100);
+
+    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
+    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
 
 
     return 0;
