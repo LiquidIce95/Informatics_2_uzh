@@ -1,0 +1,37 @@
+hashtable1:
+
+[,,,,,,,,,,]
+
+insert(6)
+
+[(6,17),,(30,41),,,,,25,]
+
+Python 3.11.2 (main, Mar 13 2023, 12:18:29) [GCC 12.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> def hash(k):
+...     return (k+5)%11                                                                                                                                                                                                                     
+...                                                                                                                                                                                                                                         
+>>> hash(6)                                                                                                                                                                                                                                 
+0                                                                                                                                                                                                                                           
+>>> def hash2(k):
+... 
+KeyboardInterrupt                                                                                                                                                                                                                           
+>>> import math                                                                                                                                                                                                                             
+>>> def hash2(k):                                                                                                                                                                                                                           
+...     return math.floor(8*((k*0.618)%1))
+...                                                                                                                                                                                                                                         
+>>> hash2(6)                                                                                                                                                                                                                                
+5                                                                                                                                                                                                                                           
+>>> hash(6)                                                                                                                                                                                                                                 
+0                                                                                                                                                                                                                                           
+>>> l = [6,30,41,25,17,10,60,14,52,5]
+>>> res1 = [hash(x) for x in l]
+>>> res1                                                                                                                                                                                                                                    
+[0, 2, 2, 8, 0, 4, 10, 8, 2, 10]                                                                                                                                                                                                            
+>>> res1 = [(x,hash(x)) for x in l]
+>>> res1                                                                                                                                                                                                                                    
+[(6, 0), (30, 2), (41, 2), (25, 8), (17, 0), (10, 4), (60, 10), (14, 8), (52, 2), (5, 10)]
+>>> 
+
+
+
