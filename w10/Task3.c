@@ -51,8 +51,7 @@ int insertion(struct HashingTable* table, int ele){
     int index = table->hashfun(ele,table->size,probnum);
 
     while(table->array[index] != 0 && index < table->size){
-        probnum++;
-        index = table->hashfun(ele,table->size,probnum);        
+        index = table->hashfun(ele,table->size,++probnum);        
     }
 
     if(index >= table->size){

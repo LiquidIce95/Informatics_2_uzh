@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
+struct Ele{
+    int key;
+    int status; // 0 occupied, -1: Empty
+};
+
 // hashing class/struct with integers as elements to be stored 
 // using open addressing : double hashing only
 // with deletion
@@ -11,7 +17,7 @@ struct HashingTable{
     int (*search)(struct HashingTable* table, int ele);
     void (*delete)(struct HashingTable* table, int key);
     void (*print)(struct HashingTable*);
-    int* array;
+    struct Ele* array;
     int size;
 
 };
@@ -27,12 +33,13 @@ struct HashingTable* init(int (*hashfun)(int ele,int size,int probnum),int (*ins
     table->search = search;
     table->delete = delete;
     table->print = print;
-    table->array = malloc(sizeof(int)*size);
+    table->array = malloc(sizeof(struct Ele)*size);
     table->size = size;
 
     // use 0 as garbage value/ empty value
     for(int k = 0; k < size; k++){
-        table->array[k] = 0;
+        table->array[k].key = -1;
+        table->array[k].status = -1;
     }
 
     return table;
@@ -42,8 +49,7 @@ struct HashingTable* init(int (*hashfun)(int ele,int size,int probnum),int (*ins
 // given from exercise
 int hashfun1(int ele, int size, int probnum){
 
-
-    return ((ele % size +1) + probnum*(size - 1 -(ele %(size-1))))%size;
+    return ele%size;
 
 }
 
@@ -54,15 +60,16 @@ int insertion(struct HashingTable* table, int ele){
     int index = init_index;
     int size = table->size;
 
-   while(table->array[index] != 0 ){
-        index = (index++)%size;
+   while(table->array[index].status == 0 ){
+        index = (++index)%size;
         if(index == init_index){
             // table is full
             return -1;
         }
    }
 
-    table->array[index] = ele;
+    table->array[index].key = ele;
+    table->array[index].status = 0;
 
     return index;
 }
@@ -74,7 +81,7 @@ int search(struct HashingTable* table, int ele){
     int index = init_index;
     int size = table->size;
 
-   while(table->array[index] != ele ){
+   while(table->array[index].key != ele ){
         index = (index++)%size;
         if(index == init_index){
             // table is full
@@ -92,7 +99,7 @@ void print(struct HashingTable* table){
     int siz = table->size;
 
     for(int k = 0; k < siz; k++){
-        printf("%d",table->array[k]);
+        printf("%d",table->array[k].key);
         printf("%s","\n");
     }
     
@@ -100,7 +107,29 @@ void print(struct HashingTable* table){
 
 }
 
+// the goal is to leave the hash table after deletion in the same state as if key k has never been inserted
+// naive approach would be to rehash the entire cluster (consecutive elements which are occupied) , since every element has either
+// gotten its index by first time hash or probing which is consitent with the example 
+// every element after the deleted one must thus be rehashed again
+// note my personal solution would be to implement search such that we can simply delete the element instead of rehashing the cluster
 void delete(struct HashingTable* table, int key){
+
+    key = search(table,key);
+
+    table->array[key].status = -1;
+    table->array[key].key = -1;
+
+    int k = (key+1)%table->size;
+
+    while(table->array[k].status == 0){
+        int temp = table->array[k].key;
+        table->array[k].status = -1;
+        table->array[k].key = -1;
+        
+        table->insertion(table,temp);
+        k = (k+1)%table->size;
+
+    }
 
     return ;
 }
@@ -108,31 +137,23 @@ void delete(struct HashingTable* table, int key){
 
 int main(){
 
-    struct HashingTable* table = init(hashfun1,insertion,search,print,delete,10);
-
-    table->insertion(table,10);
-    table->insertion(table,4);
-    table->insertion(table,2);
-    table->insertion(table,11);
+    struct HashingTable* table = init(hashfun1,insertion,search,print,delete,5);
 
 
-    // Unittests for deletion
-    printf("%s", "test 1: #####\n");
-    int expected =0;
-    int result = 0;
+    table->array[1].status = 0;
+    table->array[1].key = 11;
+    table->array[2].status = 0;
+    table->array[2].key = 22;
+    table->array[3].status = 0;
+    table->array[3].key = 31;
+    table->array[4].status = 0;
+    table->array[4].key = 2;
 
-    printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
-    printf("%s", "result: "); printf("%d",result); printf("%s","\n");
+    table->print(table);
 
-    
-    if(result == expected){
-        printf("\033[32m SUCCESS \033[0m\n");
-    }
-    else{
-        printf("\033[31m FAIL \033[0m\n");
-    }
+    table->delete(table,11);
 
-
+    table->print(table);
 
 
     return 0;
