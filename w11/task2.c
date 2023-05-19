@@ -23,24 +23,8 @@ bool is_palin(char* word, int start, int end){
 }
 
 
-
-// initializes a char array
-char* init_str(char word[]){
-    int len = strlen(word);
-
-    char* res = malloc(sizeof(char)*len);
-
-    for(int k = 0; k < len; k++){
-        res[k] = word[k];
-    }
-
-    return res;
-}
-
-//wrapper for the actual function
-int findMinCut_rec(char* word){
-    // this is the most cuts it could possibly have
-    int* cuts = malloc(sizeof(int)*strlen(word));
+// Recursive function to find the minimum number of cuts
+int findMinCutsRecursive(char* X, int i, int j) {
     return 0;
 }
 
@@ -53,7 +37,7 @@ int main(){
 
     //testing is palindrome
     printf("%s", "test 1: #####\n");
-    char* word = init_str("boo");
+    char* word = "boo";
     bool expected = false;
     bool result = is_palin(word,0,strlen(word));
 
@@ -70,8 +54,7 @@ int main(){
 
     printf("%s", "test 2: #####\n");
 
-    free(word);
-    word = init_str("abaaba");
+    word = "abaaba";
     expected = true;
     result = is_palin(word,0,strlen(word));
 
