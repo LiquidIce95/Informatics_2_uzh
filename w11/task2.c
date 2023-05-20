@@ -6,14 +6,19 @@
 #include <string.h>
 
 //checks if a string is a palindrome
-// assuming end < strlen(word)
+// assuming end < strlen(word) and checks from string[start] ... staring[end]
 bool is_palin(char* word, int start, int end){
-    int k = start;
-    while(k < end-k-1 && word[k] == word[end-k-1]){
+
+    if(start == end){
+        return true;
+    }
+    int k = 0;
+    while(start+k < end-k && word[start+k] == word[end-k]){
         k++;
     }
 
-    if (k < end-k){
+    // if the while loop terminates too early, this means its not a palindrome
+    if (start+k < end-k){
         return false;
     }
     else{
@@ -21,10 +26,44 @@ bool is_palin(char* word, int start, int end){
     }
 
 }
+// returns a substring, from s[i]...s[j-1]
+char* substr(char* word,int i , int j){
+    char* res = malloc(sizeof(char)*(j-1-i));
+
+    for(int l = 0; l < j; ++l){
+        res[l] = word[l];
+    }
+
+    return res;
+
+}
+
 
 
 // Recursive function to find the minimum number of cuts
+// the best cuts are those who maximazie the palindromes which are on the edges (left and right) of any word, because
+// in best case the word consists of two palindromes, so we check first of the entire word is a palindrome then we check if for n-1 the left and
+// right edges of the word are palindromes (n is the length of the entire word)  if we find one we call the function recursively on the non palindrome part of the word
+// invariant j< strlen(X) and j is the last index of word X
 int findMinCutsRecursive(char* X, int i, int j) {
+    if(is_palin(X,i,j)){
+        return 0;
+    }
+
+    
+    int k = 1;
+    while(i+k < j && j-k > i){
+
+        if(is_palin(X,i,j-k)){
+            return 1+findMinCutsRecursive(X,j-k+1,j);
+        }
+        else if (is_palin(X,i+k,j)){
+            return 1+findMinCutsRecursive(X,i,i+k-1);
+        }
+        k++;
+
+    }
+    // this should never be triggered, since any character is a palindrome
     return 0;
 }
 
@@ -39,7 +78,7 @@ int main(){
     printf("%s", "test 1: #####\n");
     char* word = "boo";
     bool expected = false;
-    bool result = is_palin(word,0,strlen(word));
+    bool result = is_palin(word,0,strlen(word)-1);
 
     printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
     printf("%s", "result: "); printf("%d",result); printf("%s","\n");
@@ -56,7 +95,7 @@ int main(){
 
     word = "abaaba";
     expected = true;
-    result = is_palin(word,0,strlen(word));
+    result = is_palin(word,0,strlen(word)-1);
 
     printf("%s","expected: "); printf("%d",expected); printf("%s","\n");
     printf("%s", "result: "); printf("%d",result); printf("%s","\n");
@@ -69,6 +108,25 @@ int main(){
         printf("\033[31m FAIL \033[0m\n");
     }
 
+    // testing substring function
+    printf("%s", "substring test 1: #####\n");
+
+    word = "abaaba";
+    char* expected2 = "aba";
+    char* result2 = substr(word,0,3);
+
+    printf("%s","expected: "); printf("%s",expected2); printf("%s","\n");
+    printf("%s", "result: "); printf("%s",result2); printf("%s","\n");
+
+    
+    if(result == expected){
+        printf("\033[32m SUCCESS \033[0m\n");
+    }
+    else{
+        printf("\033[31m FAIL \033[0m\n");
+    }
+
+    printf("\n Recursive palindrome algo tests @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
     // testing recursive find min cuts *******************************************
     // Test 1: Single character string
     printf("Test 1: Single character string\n");
