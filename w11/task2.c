@@ -48,11 +48,9 @@ char* substr(char* word,int i , int j){
 int findMinCutsRecursive(char* X, int i, int j) {
     if(is_palin(X,i,j)){
         return 0;
-    }
-
-    
+    }    
     int k = 1;
-    while(i+k < j && j-k > i){
+    while(i+k <= j && j-k >= i){
 
         if(is_palin(X,i,j-k)){
             return 1+findMinCutsRecursive(X,j-k+1,j);
@@ -67,9 +65,30 @@ int findMinCutsRecursive(char* X, int i, int j) {
     return 0;
 }
 
+// is basically an iterative version of the recursive solution
+int findMinCutsDP(char* X, int i, int j){
+    if(is_palin(X,i,j)){
+        return 0;
+    }
 
-int findMinCutsDP(){
-    return 0;
+    int k = 1;
+    int cuts = 0;
+
+    while(i+k <= j && j-k >= i){
+        if(is_palin(X,i,j-k)){
+            cuts++;
+            i = j-k+1;
+            
+
+        }
+        else if(is_palin(X,i+k,j)){
+            cuts++;
+            j = i+k-1;
+            
+        }
+        k++;
+    }
+    return cuts;
 }
 
 int main(){
@@ -244,6 +263,8 @@ int main(){
     } else {
         printf("\033[31m FAIL \033[0m\n");
     }
+
+    printf("\n DP palindrome algo tests @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 
     // testing find min cuts *******************************************
     // Test 1: Single character string
