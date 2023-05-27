@@ -1,0 +1,174 @@
+1.1 true
+1.2 false
+1.3 true
+1.4 false
+1.5 true
+1.6 false
+1.7 false
+1.8 false
+1.9 true
+1.10 C
+1.11 B, C
+1.12 B
+1.13 A 
+1.14 A 
+1.15 D
+1.16 D
+1.17 A
+1.18 A 
+1.19 5
+1.20 notice
+
+one(1) = two prints
+one(2) = 4*one(1) = 8 prints
+one(3) = 8*one(2) = 64 prints
+
+we can eliminate B, A , D  so it must be C 
+
+
+1.21
+just with T(1) = 1 we can eliminate C, now lets check T(2)=4
+
+we eliminate A now check T(3)=11, so it must be D since B gives 13 for n=3
+
+
+
+exercise 2
+
+so wee dont need to be efficient so lets just use the naiive solution
+
+we first store the even integers in an array , then we sort that array
+
+then we iterate through the queeu and if the element is even we replace it 
+with the current spot in the sorted array
+
+reverseEven(Q):
+    q2 = extract_even(Q)
+    array = to_array(q2)
+    array.sort()
+
+    queue* next = Q
+    int k = 0
+    while next != null:
+        if next.element is even:
+            Q.element = array[k]
+            k++
+            next = next.next
+
+this works because the amount of even integers in the queue and in the array are equal
+
+ok but just read the rest of the task description...
+
+so iterate through the queue Q and push the even elements to the stack S 
+then we iterate again and pop the elements if we encounter an even element.
+
+
+reverseEven(Q):
+    queue* next = Q
+
+    while(next != null):
+        if(next.elmeent is even):
+            S.push(next.element)
+            next = next.next
+
+    next = Q
+
+    while(next != null):
+        if(next.element is even):
+            next.element = S.pop
+
+    
+
+Task2.2
+
+O(n), for random integers, since worst case we still compare all integers 
+if every integers has a 1/2 probability of being even then the expected value is n/2
+pushes to the stack which is still O(n), for poppint the same
+
+O(n), since we push every integer to the stack and pop then , as always 2n comparisons
+so 3n is O(n)
+O(n), comparisons still 2n, pusing and popping  O(1) so depending wether you
+want to count comparisons or not O(n) or O(1)
+
+
+ex3
+
+task 3.1
+
+these guys should be way more precise, T1 printed sorted and then T2 printed sorted
+
+or sorted when we combine T1, T2???
+
+if one after another
+
+void print(TreeNode* root){
+    if(root->left != NULL){
+        print(root->left);
+    }
+    print("%d",root->val);
+
+    if(root->right != NULL){
+        print(root->right);
+    }
+
+}
+
+call this for r1 then for r2
+
+if they mean r1 and r2 combined
+
+int* arr = malloc(sizeof(int)*(m+n));
+
+for(int j = 0; j< m+n ; j++){
+    arr[j] = 0;
+}
+
+int k = 0;
+void toarr(TreeNode* root){
+    arr[k]=root->val;
+    k++;
+    if(root->left != NULL){
+        print(root->left);
+    }
+
+    if(root->right != NULL){
+        print(root->right);
+    }
+
+}
+
+toarr(r1);
+toarr(r2);
+
+then sort the array arr with some stdlib sorting algo
+
+arr.sort()
+
+for(int j = 0; j < m+n; j++){
+    print("%d",arr[j]);
+}
+
+
+assuming that different parents have different children
+
+the first solution is exactly n or m since we make one call for each node and 
+one print
+
+for the second solution it takes n+m time to insert into the array,
+again exactly one call for each node and one insertion
+
+then sorting the array, asussing with quicksort takes nlogn on average but (n+m)² worst case
+
+
+then iterating again for the final print is m+n so 
+
+
+worst case: O(m+n)+O((m+n)²) = O((m+n)²)
+average case: O(log(m+n)) + O(m+n)=O(m+n)
+
+best case : O(m+n) because no sorting need to happen
+
+Exercise 4
+
+
+
