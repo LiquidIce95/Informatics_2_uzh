@@ -168,7 +168,91 @@ average case: O(log(m+n)) + O(m+n)=O(m+n)
 
 best case : O(m+n) because no sorting need to happen
 
-Exercise 4
+Exercise 4.1
 
+so we start at vertex 5
+
+we have three neighbours but can choose only one, we use the convention that 
+we alwys select the first k (here 2) elements in ascending order
+
+so our bfs tree loks like 
+
+(5,1),(5,4) on between level 0 and 1
+
+then for vertex 1
+
+(1,2), (1,3)
+
+then for vertex 4 
+(4,7)
+
+then we return to 5 and repeat the beam search for the remaining nodes
+
+(5,6) though its not clear if this is intended (repeating until all nodes 
+are visited)
+
+
+Task 4.2
+
+thats basically a DFS algorithm ...
+
+(1,2),(1,3),(3,7),(7,4),(4,5),(5,6)
+
+Task 4.3
+
+beam(x,k):
+    // ned this for very first call
+    if x.visited == 0:
+        print(x)
+    for i= 0 to k:
+        x.adj[i].visited  =1
+        print(x.adj[i])
+
+
+    for i=0 to k:
+        beam(x.adj[i],k)
+
+need to do it in this way because of the order of the call stack
+
+
+Exercise 5.1
+
+its 1
+
+exercise 5.2 
+
+table is :
+
+
+0,0,0,0
+0,1,1,1
+0,1,1,3
+0,1,1,3
+0,1,1,3
+
+5.3 
+
+we need to think about the relationships between the partial solutions
+
+
+invariant: 
+
+dp[i][j] is the maximum sum of a subsequence of A[0..i-1] and dp[i][j]\leq just
+
+this gives
+dp1[i][j] = A[i]+dp[i-1][j], if A[i]+dp[i-1][j] \leq j otherwise 
+dp1[i][j] = dp[i][j]
+
+
+dp[i][j] = max(dp1[i][j],dp[i][j-1])
+
+
+
+task 5.4
+
+On the one hand we need to compute the table, then
+we need to store the according subsequences and finally 
+compute the smallest possible M by using the subsequence of the 
+dp entry which is closest to S/2
 
 
