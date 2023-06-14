@@ -3,16 +3,17 @@
 #include <string.h>
 #include <stdbool.h>
 
+// first possibility of inheritance
 typedef struct {
     int (*foo)(int a, int b);
-    class1* (*class1)(int a );
+    void* (*class1)(int a );
     int x;
     char* y;
 } class1;
 
 typedef struct {
     void (*z)();
-    int z;
+    int z2;
 } class2;
 
 typedef struct {
@@ -20,6 +21,20 @@ typedef struct {
     class2 base2;
 } poly;
 
+
+// second possibility more syntax but recursive definitions possible
+struct node{
+    struct node* next;
+    int val;
+};
+
+struct node2{
+    struct node root;
+};
+
+typedef struct {
+    struct node* start;
+} linkedlist;
 
 int main(){
 
@@ -30,6 +45,10 @@ int main(){
     ob1->y = "balbal";
 
     poly* ob2 = malloc(sizeof(poly));
+
+    linkedlist* li = malloc(sizeof(linkedlist));
+
+    li->start = NULL;
 
     
 
